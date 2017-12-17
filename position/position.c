@@ -45,8 +45,10 @@ void update_position(struct position* pos)
     float  xdelta = (float)(pos->x_vel) * ((float)TIC_MILLI/1000.0f);
     float  ydelta = (float)(pos->y_vel) * ((float)TIC_MILLI/1000.0f);
 
-    pos->x_pos = pos->x_pos + xdelta;
-    pos->y_pos = pos->y_pos + ydelta;
+    pthread_mutex_lock(pos->m);
+    pos->x_pos = ((int)(pos->x_pos + xdelta) + X_POS_BOUND) % X_POS_BOUND;
+    pos->y_pos = ((int)(pos->y_pos + ydelta) + X_POS_BOUND) % Y_POS_BOUND;
+    pthread_mutex_unlock(pos->m);
 }
 
 int get_x(struct position* pos)

@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 
-static const int TIC_MILLI = 100;
+static const int TIC_MILLI = 50;
 static const int MAX_ABS_VEL = 150;
 static const int MAX_ABS_ACC = 100;
-static const int OPPOSING_ACC = 5;
+static const int OPPOSING_ACC = 50;
 static const int X_POS_BOUND = 900;
 static const int Y_POS_BOUND = 900;
 

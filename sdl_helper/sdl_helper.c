@@ -90,7 +90,15 @@ void renderImage(SDL_Renderer *renderer, char *image)
 void drawRect(SDL_Renderer* renderer, int x, int y)
 {
     SDL_Rect fillRect = {x,y,100,100};
-    SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0xFF, 0xFF );  
+    SDL_SetRenderDrawColor( renderer, 255, 0, 0, 0xFF );  
+    SDL_RenderFillRect(renderer, &fillRect);
+    SDL_RenderPresent(renderer);
+}
+
+void reset_screen(SDL_Renderer* renderer)
+{
+    SDL_Rect fillRect = {0,0,900,900};
+    SDL_SetRenderDrawColor( renderer, 225, 225, 225, 0 );  
     SDL_RenderFillRect(renderer, &fillRect);
     SDL_RenderPresent(renderer);
 }

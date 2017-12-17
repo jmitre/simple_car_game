@@ -15,5 +15,6 @@ void setLoadType(int imgLoadType);
 struct SDL_Texture* loadTexture(SDL_Renderer* renderer, char* fpath);
 void renderImage(SDL_Renderer *renderer, char *image);
 void drawRect(SDL_Renderer* renderer, int x, int y);
+void reset_screen(SDL_Renderer* renderer);
 
 #endif

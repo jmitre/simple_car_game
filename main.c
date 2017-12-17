@@ -14,7 +14,8 @@ void main()
     SDL_Event event;
     int  hasquit = -1;
     
-    drawRect(renderer, get_x(pos), get_y(pos));
+    reset_screen(renderer);
+    drawRect(renderer, get_x(pos), get_y(pos));        
     while(hasquit != 0)
     {
         while(hasquit != 0 && SDL_PollEvent(&event)!=0)
@@ -63,8 +64,8 @@ void main()
             }
             
         }
-        renderImage(renderer, "track.bmp");
-        drawRect(renderer, get_x(pos), get_y(pos));
+        reset_screen(renderer);
+        drawRect(renderer, get_x(pos), get_y(pos));        
         SDL_Delay(100);
     }
     destroy_position(pos);

@@ -74,10 +74,11 @@ void update_velocity(struct position* pos)
     float  ydelta = (float)(pos->y_acc) * ((float)TIC_MILLI/1000.0f);
     pthread_mutex_unlock(pos->m);
 
+    int opposing_acc = (int)((float)(OPPOSING_ACC) * ((float)TIC_MILLI/1000.0f));
     int new_x, new_y = 0;
     if( pos->x_vel > 0 )
     {
-        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) - OPPOSING_ACC;
+        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) - opposing_acc;
         if( new_x < 0 )
         {
             new_x = 0;
@@ -85,7 +86,7 @@ void update_velocity(struct position* pos)
     }
     if( pos->x_vel < 0 )
     {
-        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) + OPPOSING_ACC;
+        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) + opposing_acc;
         if( new_x > 0 )
         {
             new_x = 0;
@@ -97,7 +98,7 @@ void update_velocity(struct position* pos)
     }
     if( pos->y_vel > 0 )
     {
-        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) - OPPOSING_ACC;
+        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) - opposing_acc;
         if( new_y < 0 )
         {
             new_y = 0;
@@ -105,7 +106,7 @@ void update_velocity(struct position* pos)
     }
     if( pos->y_vel < 0 )
     {
-        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) + OPPOSING_ACC;
+        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) + opposing_acc;
         if( new_y > 0 )
         {
             new_y = 0;

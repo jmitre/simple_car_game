@@ -7,9 +7,9 @@
 #include <stdlib.h>
 
 
-static const int TIC_MILLI = 300;
-static const int MAX_ABS_VEL = 100;
-static const int MAX_ABS_ACC = 50;
+static const int TIC_MILLI = 100;
+static const int MAX_ABS_VEL = 200;
+static const int MAX_ABS_ACC = 100;
 static const int OPPOSING_ACC = 1;
 
 
@@ -26,5 +26,8 @@ void accelerate(struct position* pos, int xdelta,int ydelta);
 void apply_resistance(struct position* pos);
 int val_inbounds(int val, int max_abs);
 void apply_resistance(struct position* pos);
+void destroy_position(struct position *pos);
+int get_x(struct position* pos);
+int get_y(struct position* pos);
 
 #endif

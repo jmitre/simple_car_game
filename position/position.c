@@ -49,6 +49,24 @@ void update_position(struct position* pos)
     pos->y_pos = pos->y_pos + ydelta;
 }
 
+int get_x(struct position* pos)
+{
+    pthread_mutex_lock(pos->m);
+    int x = pos->x_pos;
+    pthread_mutex_unlock(pos->m);
+
+    return x;
+}
+
+int get_y(struct position* pos)
+{
+    pthread_mutex_lock(pos->m);
+    int y = pos->y_pos;
+    pthread_mutex_unlock(pos->m);
+
+    return y;
+}
+
 void update_velocity(struct position* pos)
 {
     pthread_mutex_lock(pos->m);
@@ -58,6 +76,7 @@ void update_velocity(struct position* pos)
 
     pos->x_vel = val_inbounds(pos->x_vel + xdelta, MAX_ABS_VEL);
     pos->y_vel = val_inbounds(pos->y_vel + ydelta, MAX_ABS_VEL);
+    printf("NEW VELOCITY %d %d\n", pos->x_vel, pos->y_vel);
 }
 
 
@@ -100,6 +119,12 @@ void apply_resistance(struct position* pos)
     {
         pos->y_acc = pos->y_acc + OPPOSING_ACC;
     }
-    if (pos->x_vel == 0) pos->x_acc = 0;
-    if (pos->y_vel == 0) pos->y_acc = 0;
+    /* if (pos->x_vel == 0) pos->x_acc = 0; */
+    /* if (pos->y_vel == 0) pos->y_acc = 0; */
+}
+
+void destroy_position(struct position *pos)
+{
+    free(pos->m);
+    free(pos);
 }

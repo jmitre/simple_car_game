@@ -8,6 +8,10 @@
 
 
 static const int TIC_MILLI = 300;
+static const int MAX_ABS_VEL = 100;
+static const int MAX_ABS_ACC = 50;
+static const int OPPOSING_ACC = 1;
+
 
 struct position {
     int x_pos, y_pos, x_vel, y_vel, x_acc, y_acc;
@@ -19,5 +23,8 @@ void *manage_position(void *x_void_ptr);
 void update_position(struct position* pos);
 void update_velocity(struct position* pos);
 void accelerate(struct position* pos, int xdelta,int ydelta);
+void apply_resistance(struct position* pos);
+int val_inbounds(int val, int max_abs);
+void apply_resistance(struct position* pos);
 
 #endif

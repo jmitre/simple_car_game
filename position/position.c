@@ -33,8 +33,9 @@ void *manage_position(void *x_void_ptr)
         usleep(TIC_MILLI * 1000);
         update_position(pos_manager);
         update_velocity(pos_manager);
+        apply_resistance(pos_manager);
         
-        printf("(%d, %d)\n", pos_manager->x_pos, pos_manager->y_pos);
+        printf("P(%d, %d) V(%d,%d) A(%d,%d)\n", pos_manager->x_pos, pos_manager->y_pos, pos_manager->x_vel, pos_manager->y_vel, pos_manager->x_acc, pos_manager->y_acc);
     }
 }
 
@@ -45,7 +46,7 @@ void update_position(struct position* pos)
     float  ydelta = (float)(pos->y_vel) * ((float)TIC_MILLI/1000.0f);
 
     pos->x_pos = pos->x_pos + xdelta;
-    pos->x_pos = pos->x_pos + ydelta;
+    pos->y_pos = pos->y_pos + ydelta;
 }
 
 void update_velocity(struct position* pos)
@@ -55,16 +56,50 @@ void update_velocity(struct position* pos)
     float  ydelta = (float)(pos->y_acc) * ((float)TIC_MILLI/1000.0f);
     pthread_mutex_unlock(pos->m);
 
-    pos->x_vel = pos->x_vel + xdelta;
-    pos->x_vel = pos->x_vel + ydelta;
+    pos->x_vel = val_inbounds(pos->x_vel + xdelta, MAX_ABS_VEL);
+    pos->y_vel = val_inbounds(pos->y_vel + ydelta, MAX_ABS_VEL);
 }
+
 
 void accelerate(struct position* pos, int xdelta,int ydelta)
 {
     printf("current velocity(%d, %d)\n", pos->x_vel, pos->y_vel);
     pthread_mutex_lock(pos->m);
-    pos->x_acc = pos->x_acc + xdelta;
-    pos->x_acc = pos->x_acc + ydelta;
+
+    pos->x_acc = val_inbounds(pos->x_acc + xdelta, MAX_ABS_ACC);
+    pos->y_acc = val_inbounds(pos->y_acc + ydelta, MAX_ABS_ACC);
+
+    printf("New Acceleration (%d, %d)\n", pos->x_acc, pos->y_acc);
     pthread_mutex_unlock(pos->m);
-    printf("New Acceleration\n (%d, %d)\n", pos->x_acc, pos->y_acc);
+}
+
+int val_inbounds(int val, int max_abs)
+{
+    if(val > max_abs)
+        return max_abs;
+    if(val < -1*max_abs)
+        return -1*max_abs;
+    return val;
+}
+
+void apply_resistance(struct position* pos)
+{
+    if (pos->x_vel > 0)
+    {
+        pos->x_acc = pos->x_acc - OPPOSING_ACC;
+    }
+    if (pos->x_vel < 0)
+    {
+        pos->x_acc = pos->x_acc + OPPOSING_ACC;
+    }
+    if (pos->y_vel > 0)
+    {
+        pos->y_acc = pos->y_acc - OPPOSING_ACC;
+    }
+    if (pos->y_vel < 0)
+    {
+        pos->y_acc = pos->y_acc + OPPOSING_ACC;
+    }
+    if (pos->x_vel == 0) pos->x_acc = 0;
+    if (pos->y_vel == 0) pos->y_acc = 0;
 }

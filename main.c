@@ -67,5 +67,10 @@ void main()
         drawRect(renderer, get_x(pos), get_y(pos));
         SDL_Delay(100);
     }
+    destroy_position(pos);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 
+    IMG_Quit();
+    SDL_Quit();
 }

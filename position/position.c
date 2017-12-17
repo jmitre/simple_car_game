@@ -17,8 +17,8 @@ struct position* init_position(int start_x, int start_y)
 
     pos->m = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
 
-    pthread_t *pos_thread = (pthread_t*) malloc(sizeof(pthread_t));
-    pthread_create(pos_thread, NULL,*manage_position, (void*)pos);
+    pos->t= (pthread_t*) malloc(sizeof(pthread_t));
+    pthread_create(pos->t, NULL,*manage_position, (void*)pos);
     
     return pos;
 }
@@ -143,5 +143,6 @@ int val_inbounds(int val, int max_abs)
 void destroy_position(struct position *pos)
 {
     free(pos->m);
+    free(pos->t);
     free(pos);
 }

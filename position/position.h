@@ -18,6 +18,7 @@ static const int Y_POS_BOUND = 900;
 struct position {
     int x_pos, y_pos, x_vel, y_vel, x_acc, y_acc;
     pthread_mutex_t *m;
+    pthread_t *t;
 };
 
 struct position* init_position(int start_x, int start_y);

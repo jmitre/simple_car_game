@@ -18,7 +18,6 @@ struct position* init_position(int start_x, int start_y)
     pos->m = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
 
     pthread_t *pos_thread = (pthread_t*) malloc(sizeof(pthread_t));
-    printf("starting thread\n");
     pthread_create(pos_thread, NULL,*manage_position, (void*)pos);
     
     return pos;
@@ -33,7 +32,6 @@ void *manage_position(void *x_void_ptr)
         usleep(TIC_MILLI * 1000);
         update_position(pos_manager);
         update_velocity(pos_manager);
-        apply_resistance(pos_manager);
         
         printf("P(%d, %d) V(%d,%d) A(%d,%d)\n", pos_manager->x_pos, pos_manager->y_pos, pos_manager->x_vel, pos_manager->y_vel, pos_manager->x_acc, pos_manager->y_acc);
     }
@@ -74,23 +72,61 @@ void update_velocity(struct position* pos)
     pthread_mutex_lock(pos->m);
     float  xdelta = (float)(pos->x_acc) * ((float)TIC_MILLI/1000.0f);
     float  ydelta = (float)(pos->y_acc) * ((float)TIC_MILLI/1000.0f);
-    pthread_mutex_unlock(pos->m);
 
-    pos->x_vel = val_inbounds(pos->x_vel + xdelta, MAX_ABS_VEL);
-    pos->y_vel = val_inbounds(pos->y_vel + ydelta, MAX_ABS_VEL);
-    printf("NEW VELOCITY %d %d\n", pos->x_vel, pos->y_vel);
+    int new_x, new_y = 0;
+    if( pos->x_vel > 0 )
+    {
+        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) - OPPOSING_ACC;
+        if( new_x < 0 )
+        {
+            new_x = 0;
+        }
+    }
+    if( pos->x_vel < 0 )
+    {
+        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) + OPPOSING_ACC;
+        if( new_x > 0 )
+        {
+            new_x = 0;
+        }
+    }
+    if( pos->x_vel == 0 )
+    {
+        new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL);
+    }
+    if( pos->y_vel > 0 )
+    {
+        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) - OPPOSING_ACC;
+        if( new_y < 0 )
+        {
+            new_y = 0;
+        }
+    }
+    if( pos->y_vel < 0 )
+    {
+        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) + OPPOSING_ACC;
+        if( new_y > 0 )
+        {
+            new_y = 0;
+        }
+    }
+    if( pos->y_vel == 0 )
+    {
+        new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL);
+    }
+    pos->x_vel = new_x;
+    pos->y_vel = new_y;
+    pthread_mutex_unlock(pos->m);
 }
 
 
 void accelerate(struct position* pos, int xdelta,int ydelta)
 {
-    printf("current velocity(%d, %d)\n", pos->x_vel, pos->y_vel);
     pthread_mutex_lock(pos->m);
 
     pos->x_acc = val_inbounds(pos->x_acc + xdelta, MAX_ABS_ACC);
     pos->y_acc = val_inbounds(pos->y_acc + ydelta, MAX_ABS_ACC);
 
-    printf("New Acceleration (%d, %d)\n", pos->x_acc, pos->y_acc);
     pthread_mutex_unlock(pos->m);
 }
 
@@ -103,27 +139,6 @@ int val_inbounds(int val, int max_abs)
     return val;
 }
 
-void apply_resistance(struct position* pos)
-{
-    if (pos->x_vel > 0)
-    {
-        pos->x_acc = pos->x_acc - OPPOSING_ACC;
-    }
-    if (pos->x_vel < 0)
-    {
-        pos->x_acc = pos->x_acc + OPPOSING_ACC;
-    }
-    if (pos->y_vel > 0)
-    {
-        pos->y_acc = pos->y_acc - OPPOSING_ACC;
-    }
-    if (pos->y_vel < 0)
-    {
-        pos->y_acc = pos->y_acc + OPPOSING_ACC;
-    }
-    /* if (pos->x_vel == 0) pos->x_acc = 0; */
-    /* if (pos->y_vel == 0) pos->y_acc = 0; */
-}
 
 void destroy_position(struct position *pos)
 {

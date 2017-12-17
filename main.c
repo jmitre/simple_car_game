@@ -28,16 +28,34 @@ void main()
                     switch (event.key.keysym.scancode)
                      {
                         case SDL_SCANCODE_LEFT:
-                            accelerate(pos, -50, 0);
+                            accelerate(pos, -100, 0);
                         break;
                         case SDL_SCANCODE_RIGHT:
-                            accelerate(pos, 50, 0);
+                            accelerate(pos, 100, 0);
                         break;
                         case SDL_SCANCODE_UP:
-                            accelerate(pos, 0, -50);
+                            accelerate(pos, 0, -100);
                         break;
                         case SDL_SCANCODE_DOWN:
-                            accelerate(pos, 0, 50);
+                            accelerate(pos, 0, 100);
+                        break;
+
+                    }
+                break;
+                case SDL_KEYUP:
+                    switch (event.key.keysym.scancode)
+                     {
+                        case SDL_SCANCODE_LEFT:
+                            accelerate(pos, 100, 0);
+                        break;
+                        case SDL_SCANCODE_RIGHT:
+                            accelerate(pos, -100, 0);
+                        break;
+                        case SDL_SCANCODE_UP:
+                            accelerate(pos, 0, 100);
+                        break;
+                        case SDL_SCANCODE_DOWN:
+                            accelerate(pos, 0, -100);
                         break;
 
                     }

@@ -72,6 +72,7 @@ void update_velocity(struct position* pos)
     pthread_mutex_lock(pos->m);
     float  xdelta = (float)(pos->x_acc) * ((float)TIC_MILLI/1000.0f);
     float  ydelta = (float)(pos->y_acc) * ((float)TIC_MILLI/1000.0f);
+    pthread_mutex_unlock(pos->m);
 
     int new_x, new_y = 0;
     if( pos->x_vel > 0 )
@@ -116,7 +117,6 @@ void update_velocity(struct position* pos)
     }
     pos->x_vel = new_x;
     pos->y_vel = new_y;
-    pthread_mutex_unlock(pos->m);
 }
 
 

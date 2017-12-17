@@ -1,6 +1,11 @@
-#include "postition_manager/position_manager.h"
+#include "position/position.h"
 
 void main(){
-    init_position(2,3);
-    sleep(1000);
+    struct position* pos = init_position(2,3);
+    accelerate(pos, 100, 0);
+    sleep(10);
+    accelerate(pos, -200, 0);
+    sleep(10);
+    accelerate(pos, 100, 0);
+    sleep(10);
 }

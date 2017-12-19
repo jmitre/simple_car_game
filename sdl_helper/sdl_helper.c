@@ -10,7 +10,7 @@ struct SDL_Window* createWindow()
         exit(1);
     }
 
-    window = SDL_CreateWindow("Move Sprite Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,SCREEEN_WIDTH, SCEEEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Move Sprite Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,900, 900, SDL_WINDOW_SHOWN);
     if( window == NULL )
     {
         printf("Window not created: %s\n", SDL_GetError());

@@ -7,13 +7,13 @@ struct position* init_position(int start_x, int start_y)
     struct position *pos;
     pos  = (struct position*) malloc(sizeof(struct position));
 
-    pos->x_pos = start_x;
-    pos->y_pos = start_y;
+    pos->x_pos = (float)start_x;
+    pos->y_pos = (float)start_y;
 
-    pos->x_vel = 0;
-    pos->y_vel = 0;
-    pos->x_acc = 0;
-    pos->y_acc = 0;
+    pos->x_vel = 0.0f;
+    pos->y_vel = 0.0f;
+    pos->x_acc = 0.0f;
+    pos->y_acc = 0.0f;
 
     pos->m = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
 
@@ -33,7 +33,7 @@ void *manage_position(void *x_void_ptr)
         update_position(pos_manager);
         update_velocity(pos_manager);
         
-        printf("P(%d, %d) V(%d,%d) A(%d,%d)\n", pos_manager->x_pos, pos_manager->y_pos, pos_manager->x_vel, pos_manager->y_vel, pos_manager->x_acc, pos_manager->y_acc);
+        printf("P(%f, %f) V(%f,%f) A(%f,%f)\n", pos_manager->x_pos, pos_manager->y_pos, pos_manager->x_vel, pos_manager->y_vel, pos_manager->x_acc, pos_manager->y_acc);
     }
 }
 
@@ -44,18 +44,18 @@ void update_position(struct position* pos)
     float  ydelta = (float)(pos->y_vel) * ((float)TIC_MILLI/1000.0f);
 
     pthread_mutex_lock(pos->m);
-    pos->x_pos = ((int)(pos->x_pos + xdelta) + X_POS_BOUND) % X_POS_BOUND;
-    pos->y_pos = ((int)(pos->y_pos + ydelta) + X_POS_BOUND) % Y_POS_BOUND;
+    pos->x_pos = fmodf((pos->x_pos + xdelta+X_POS_BOUND),X_POS_BOUND);
+    pos->y_pos = fmodf(pos->y_pos + ydelta+Y_POS_BOUND,Y_POS_BOUND);
     pthread_mutex_unlock(pos->m);
 }
 
 int get_x(struct position* pos)
 {
     pthread_mutex_lock(pos->m);
-    int x = pos->x_pos;
+    float x = pos->x_pos;
     pthread_mutex_unlock(pos->m);
 
-    return x;
+    return (int)x;
 }
 
 int get_y(struct position* pos)
@@ -64,7 +64,7 @@ int get_y(struct position* pos)
     int y = pos->y_pos;
     pthread_mutex_unlock(pos->m);
 
-    return y;
+    return (int)y;
 }
 
 void update_velocity(struct position* pos)
@@ -74,45 +74,45 @@ void update_velocity(struct position* pos)
     float  ydelta = (float)(pos->y_acc) * ((float)TIC_MILLI/1000.0f);
     pthread_mutex_unlock(pos->m);
 
-    int opposing_acc = (int)((float)(OPPOSING_ACC) * ((float)TIC_MILLI/1000.0f));
-    int new_x, new_y = 0;
-    if( pos->x_vel > 0 )
+    float opposing_acc = ((float)(OPPOSING_ACC) * ((float)TIC_MILLI/1000.0f));
+    float new_x, new_y = 0;
+    if( pos->x_vel > 0.0f )
     {
         new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) - opposing_acc;
-        if( new_x < 0 )
+        if( new_x < 0.0f )
         {
-            new_x = 0;
+            new_x = 0.0f;
         }
     }
-    if( pos->x_vel < 0 )
+    if( pos->x_vel < 0.0f )
     {
         new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL) + opposing_acc;
-        if( new_x > 0 )
+        if( new_x > 0.0f )
         {
-            new_x = 0;
+            new_x = 0.0f;
         }
     }
-    if( pos->x_vel == 0 )
+    if( pos->x_vel == 0.0f )
     {
         new_x = val_inbounds(pos->x_vel + (int)xdelta, MAX_ABS_VEL);
     }
-    if( pos->y_vel > 0 )
+    if( pos->y_vel > 0.0f )
     {
         new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) - opposing_acc;
-        if( new_y < 0 )
+        if( new_y < 0.0f )
         {
-            new_y = 0;
+            new_y = 0.0f;
         }
     }
-    if( pos->y_vel < 0 )
+    if( pos->y_vel < 0.0f )
     {
         new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL) + opposing_acc;
-        if( new_y > 0 )
+        if( new_y > 0.0f )
         {
-            new_y = 0;
+            new_y = 0.0f;
         }
     }
-    if( pos->y_vel == 0 )
+    if( pos->y_vel == 0.0f )
     {
         new_y = val_inbounds(pos->y_vel + (int)ydelta, MAX_ABS_VEL);
     }
@@ -131,7 +131,7 @@ void accelerate(struct position* pos, int xdelta,int ydelta)
     pthread_mutex_unlock(pos->m);
 }
 
-int val_inbounds(int val, int max_abs)
+float val_inbounds(float val, float max_abs)
 {
     if(val > max_abs)
         return max_abs;

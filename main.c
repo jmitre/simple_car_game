@@ -9,7 +9,6 @@ void main()
 
     window = createWindow();
     renderer = createRenderer(window);
-    renderImage(renderer, "track.bmp");
 
     SDL_Event event;
     int  hasquit = -1;

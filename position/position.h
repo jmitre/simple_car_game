@@ -5,18 +5,19 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <math.h>
 
 
-static const int TIC_MILLI = 50;
+static const int TIC_MILLI = 10;
 static const int MAX_ABS_VEL = 150;
 static const int MAX_ABS_ACC = 100;
 static const int OPPOSING_ACC = 50;
-static const int X_POS_BOUND = 900;
-static const int Y_POS_BOUND = 900;
+static const float X_POS_BOUND = 900.0f;
+static const float Y_POS_BOUND = 900.0f;
 
 
 struct position {
-    int x_pos, y_pos, x_vel, y_vel, x_acc, y_acc;
+    float x_pos, y_pos, x_vel, y_vel, x_acc, y_acc;
     pthread_mutex_t *m;
     pthread_t *t;
 };
@@ -27,7 +28,7 @@ void update_position(struct position* pos);
 void update_velocity(struct position* pos);
 void accelerate(struct position* pos, int xdelta,int ydelta);
 void apply_resistance(struct position* pos);
-int val_inbounds(int val, int max_abs);
+float val_inbounds(float val, float max_abs);
 void apply_resistance(struct position* pos);
 void destroy_position(struct position *pos);
 int get_x(struct position* pos);

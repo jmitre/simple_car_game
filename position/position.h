@@ -9,9 +9,9 @@
 
 
 static const int TIC_MILLI = 10;
-static const int MAX_ABS_VEL = 150;
-static const int MAX_ABS_ACC = 100;
-static const int OPPOSING_ACC = 50;
+static const float MAX_ABS_VEL = 200.0f;
+static const float MAX_ABS_ACC = 100.0f;
+static const float OPPOSING_ACC = 30.0f;
 static const float X_POS_BOUND = 900.0f;
 static const float Y_POS_BOUND = 900.0f;
 

@@ -63,9 +63,9 @@ void main()
             }
             
         }
-        reset_screen(renderer);
+        /* reset_screen(renderer); */
         drawRect(renderer, get_x(pos), get_y(pos));        
-        SDL_Delay(100);
+        SDL_Delay(15);
     }
     destroy_position(pos);
     SDL_DestroyRenderer(renderer);

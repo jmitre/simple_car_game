@@ -63,7 +63,8 @@ void main()
             }
             
         }
-        /* reset_screen(renderer); */
+        SDL_SetRenderDrawColor( renderer, 255, 225, 225, 0 );
+        SDL_RenderClear(renderer);
         drawRect(renderer, get_x(pos), get_y(pos));        
         SDL_Delay(15);
     }

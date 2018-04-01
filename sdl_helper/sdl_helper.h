@@ -16,5 +16,7 @@ struct SDL_Texture* loadTexture(SDL_Renderer* renderer, char* fpath);
 void renderImage(SDL_Renderer *renderer, char *image);
 void drawRect(SDL_Renderer* renderer, int x, int y);
 void reset_screen(SDL_Renderer* renderer);
+SDL_Texture* load_sprite_texture(char* image, SDL_Renderer *renderer);
+void draw_sprite(SDL_Renderer *renderer, SDL_Texture *sprite_texture, int x, int y);
 
 #endif

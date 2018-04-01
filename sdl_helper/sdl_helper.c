@@ -1,7 +1,9 @@
 #include "sdl_helper.h"
+#include <SDL_image.h>
 
 struct SDL_Window* createWindow()
 {
+    printf("Creating window\n");
     struct SDL_Window* window = NULL;
 
     if( SDL_Init(SDL_INIT_VIDEO) < 0 )
@@ -95,10 +97,26 @@ void drawRect(SDL_Renderer* renderer, int x, int y)
     SDL_RenderPresent(renderer);
 }
 
+void draw_sprite(SDL_Renderer *renderer, SDL_Texture *sprite_texture, int x, int y)
+{
+    SDL_Rect pos_rect = {x,y,100,100};
+    SDL_RenderCopy(renderer, sprite_texture,NULL, &pos_rect );
+    SDL_RenderPresent(renderer);
+}
+
 void reset_screen(SDL_Renderer* renderer)
 {
     SDL_Rect fillRect = {0,0,900,900};
     SDL_SetRenderDrawColor( renderer, 225, 225, 225, 0 );  
     SDL_RenderFillRect(renderer, &fillRect);
     SDL_RenderPresent(renderer);
+}
+
+SDL_Texture* load_sprite_texture(char* image, SDL_Renderer *renderer)
+{
+    IMG_Init(IMG_INIT_PNG);
+    SDL_Surface *sprite_surface = IMG_Load(image);
+    SDL_Texture *sprite_texture = SDL_CreateTextureFromSurface(renderer, sprite_surface);
+
+    return sprite_texture;
 }

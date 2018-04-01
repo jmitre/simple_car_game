@@ -9,12 +9,13 @@ void main()
 
     window = createWindow();
     renderer = createRenderer(window);
+    SDL_Texture *sprite_texture = load_sprite_texture("F-35D.PNG", renderer);
 
     SDL_Event event;
     int  hasquit = -1;
     
     reset_screen(renderer);
-    drawRect(renderer, get_x(pos), get_y(pos));        
+    draw_sprite(renderer, sprite_texture, get_x(pos), get_y(pos));
     while(hasquit != 0)
     {
         while(hasquit != 0 && SDL_PollEvent(&event)!=0)
@@ -65,7 +66,7 @@ void main()
         }
         SDL_SetRenderDrawColor( renderer, 255, 225, 225, 0 );
         SDL_RenderClear(renderer);
-        drawRect(renderer, get_x(pos), get_y(pos));        
+        draw_sprite(renderer, sprite_texture, get_x(pos), get_y(pos));
         SDL_Delay(15);
     }
     destroy_position(pos);
